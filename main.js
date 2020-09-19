@@ -45,10 +45,10 @@ client.on('message', async message => {
 });
 
 client.on('voiceStateUpdate', async (oldVoice, newVoice) => {
-    if (!newVoice.guild.members.cache.get(this.client.user.id).voice.channelID) client.queue = new Map()
+    if (!newVoice.guild.members.cache.get(client.user.id).voice.channelID) client.queue = new Map()
     if (oldVoice.id === client.user.id) return
     if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
-    if (oldVoice.guild.members.cache.get(this.client.user.id).voice.channel.id === oldVoice.channelID) {
+    if (oldVoice.guild.members.cache.get(client.user.id).voice.channel.id === oldVoice.channelID) {
         if (oldVoice.guild.voice.channel && oldVoice.guild.voice.channel.members.size === 1) {
             const delay = ms => new Promise(res => setTimeout(res, ms))
             await delay(15000)
