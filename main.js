@@ -44,7 +44,7 @@ client.on('message', async message => {
     if (command) command.run(client, message, args);
 });
 
-client.on('voiceStateUpdate', async (oldVoice, _) => {
+client.on('voiceStateUpdate', async (oldVoice, newVoice) => {
     if (!newVoice.guild.members.cache.get(this.client.user.id).voice.channelID) client.queue = new Map()
     if (oldVoice.id === client.user.id) return
     if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
