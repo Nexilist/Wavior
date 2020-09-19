@@ -56,4 +56,4 @@ client.on('voiceStateUpdate', async (oldVoice, _) => {
     }
 })  
 
-client.login(`NzQ4NzI5NTc2OTU5NTA4NTMx.X0hqwQ.L255vMkwM9lfl40Gctf5zQXm0Bs`);
+client.login(process.env.token);
