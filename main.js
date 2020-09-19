@@ -44,21 +44,4 @@ client.on('message', async message => {
     if (command) command.run(client, message, args);
 });
 
-client.on('voiceStateUpdate', async (oldVoice, newVoice) => {
-    if (!newVoice.guild.members.cache.get(client.user.id).voice.channelID) client.queue = new Map()
-    if (oldVoice.id === client.user.id) return
-    if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
-    if (oldVoice.guild.members.cache.get(client.user.id).voice.channel.id === oldVoice.channelID) {
-        if (oldVoice.guild.voice.channel && oldVoice.guild.voice.channel.members.size === 1) {
-            const delay = ms => new Promise(res => setTimeout(res, ms))
-            await delay(15000)
-            const vcMembers = oldVoice.guild.voice.channel.members.size
-            if (!vcMembers || vcMembers < 2) {
-                oldVoice.guild.me.voice.channel.leave();
-                client.queue = new Map();
-            }
-        }
-    }
-})  
-
 client.login(process.env.token);
