@@ -8,17 +8,18 @@ module.exports.run = async (client, message, args) => {
 	const searchString = args.slice(1).join(' ');   
     const url = args[0] ? args[0].replace(/<(.+)>/g, '$1') : ' ';
     const serverQueue = client.queue.get(message.guild.id);
+    const Return = new Discord.MessageEmbed().setColor("RANDOM")
 
     const VoiceChannel = message.member.voice.channel;
-    if (!VoiceChannel) return message.channel.send('You aren\'t connected to a voice channel!');
+    if (!VoiceChannel) return message.channel.send(Return.setDescription(`You aren\'t connected to a voice channel!`));
 
     if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) {
-        return message.channel.send(`You aren\'t in the same channel as me!`);
+        return message.channel.send(Return.setDescription(`You aren\'t in the same voice channel as me!`));
     };
 
     const permissions = VoiceChannel.permissionsFor(message.client.user);
-    if (!permissions.has('CONNECT')) return message.channel.send('**Missing Permissions**: \`CONNECT\`');
-    if (!permissions.has('SPEAK')) return message.channel.send('**Missing Permissions**: \`SPEAK\`');
+    if (!permissions.has('CONNECT')) return message.channel.send(Return.setDescription(`Missing Permissions: **CONNECT**`));
+    if (!permissions.has('SPEAK')) return message.channel.send(Return.setDescription(`Missing Permissions: **SPEAK**`));
 
     if (serverQueue && !serverQueue.playing && !args[0]) {
         serverQueue.playing = true;
@@ -96,7 +97,7 @@ async function HandleVideo(client, video, message, voiceChannel, playlist = fals
             const playing = new Discord.MessageEmbed().setTitle("Now Playing:").setColor("RANDOM")
                 .setDescription(`[${video.title}](${video.url})\n\`[${formatSeconds(queueConstruct.songs[0].duration)}]\``)
                 .setThumbnail(queueConstruct.songs[0].thumbnail)
-                .addField("Requested By:", queueConstruct.songs[0].requested, true)
+                .setFooter(`Requested By: ${queueConstruct.songs[0].requested.tag}`)
             message.channel.send(playing);
         } 
         catch(error) {
@@ -131,7 +132,7 @@ async function PlaySong(client, guild, song) {
         PlaySong(client, guild, serverQueue.songs[0]);
     })
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
-    serverQueue.connection.on("disconnect", () => { client.queue = new Map(); });
+    serverQueue.connection.on("disconnect", () => {client.queue.delete(guild.id)})
 };
 
 formatSeconds = (seconds) => {

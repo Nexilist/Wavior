@@ -2,22 +2,23 @@ const Discord = require('discord.js');
 
 module.exports.run = async (client, message, args) => {
     const serverQueue = client.queue.get(message.guild.id);
-    
-    if (!message.member.voice.channel) return message.channel.send('You aren\'t connected to a voice channel!');
+    const Return = new Discord.MessageEmbed().setColor("RANDOM")
+
+    if (!message.member.voice.channel) return message.channel.send(Return.setDescription(`You aren\'t connected to a voice channel!`));
 
     if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) {
-        return message.channel.send(`You aren\'t in the same channel as me!`);
+        return message.channel.send(Return.setDescription(`You aren\'t in the same voice channel as me!`));
     };
-
-    if(!message.guild.me.voice.channel) return message.channel.send('I\'m not connected to a voice channel!');
+    
+    if(!message.guild.me.voice.channel) return message.channel.send(Return.setDescription(`I'm not connected to a voice channel!`));
 
     const embed = new Discord.MessageEmbed();
 
     if(serverQueue && serverQueue.playing) {
         if (!["song", "queue"].includes(args[0])) {
             embed.addFields(
-                { name: "Song Loop:", value: `**${serverQueue.songs[0].loop}**`, inline: true },
-                { name: "Queue Loop:", value: `**${serverQueue.loop}**`, inline: true },
+                { name: "Song Loop:", value: `*${serverQueue.songs[0].loop}*`, inline: false },
+                { name: "Queue Loop:", value: `*${serverQueue.loop}*`, inline: false },
             );
             return message.channel.send(embed);
         };
@@ -47,7 +48,7 @@ module.exports.run = async (client, message, args) => {
                 break;
             }
         }
-    } else message.channel.send('There is nothing currently playing');
+    } else message.channel.send(Return.setDescription('There is nothing currently playing'));
 };
 
 module.exports.help = {

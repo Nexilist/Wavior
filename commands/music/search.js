@@ -10,7 +10,7 @@ module.exports.run = async (client, message, args) => {
         let searchMsg = new Discord.MessageEmbed().setTitle("Search Results:").setColor("RANDOM").setThumbnail("https://i.imgur.com/ioBWNNE.png")
         let desc = ""
         for (var i in videos){
-            desc += `${emojis[parseInt(i)+1]} ${Discord.escapeMarkdown(videos[i].title)}\n`
+            desc += `${emojis[parseInt(i)+1]}:  ${Discord.escapeMarkdown(videos[i].title)}\n`
         }
         desc += `\n**Choose a number between 0 - ${videos.length} within 10 seconds.**`
         searchMsg.setDescription(desc)
