@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const fs = require("fs")
+require('events').EventEmitter.prototype._maxListeners = 15;
 
 const client = new Discord.Client()
 client.queue = new Map()
