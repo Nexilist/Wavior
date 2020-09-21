@@ -14,7 +14,7 @@ module.exports.run = async (client, message, args) => {
     if(!serverQueue) return message.channel.send(Return.setDescription('There is nothing currently playing.'));
 
     const embed = new Discord.MessageEmbed().setThumbnail(serverQueue.songs[0].thumbnail).setTitle("Now Playing:").setColor("RANDOM")
-        .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\`[${formatSeconds(serverQueue.songs[0].duration - (serverQueue.connection.dispatcher.streamTime / 1000))} / ${formatSeconds(serverQueue.songs[0].duration)}]\``)
+        .setDescription(`[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\`[${formatSeconds((serverQueue.connection.dispatcher.streamTime - serverQueue.connection.dispatcher.pausedTime) / 1000)} / ${formatSeconds(serverQueue.songs[0].duration)}]\``)
         .addFields(
             { name: "Looping:", value: `${serverQueue.songs[0].loop}`, inline: true},
             { name: "Requested By:", value: `${serverQueue.songs[0].requested}`, inline: true },
