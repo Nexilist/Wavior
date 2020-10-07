@@ -7,7 +7,7 @@ module.exports.run = async (client, message, args) => {
     search(args.join(' '), async function(err, res) {
         if(err) console.log(err)
         let videos = res.videos.slice(0, 10)
-        let searchMsg = new Discord.MessageEmbed().setTitle("Search Results:").setColor("RANDOM").setThumbnail("https://i.imgur.com/ioBWNNE.png")
+        let searchMsg = new Discord.MessageEmbed().setTitle("Search Results:").setColor("RANDOM").setThumbnail("https://i.imgur.com/xS9EETM.png")
         let desc = ""
         for (var i in videos){
             desc += `${emojis[parseInt(i)+1]}:  ${Discord.escapeMarkdown(videos[i].title)}\n`
