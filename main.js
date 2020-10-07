@@ -34,6 +34,28 @@ client.on("ready", () => {
     console.log(`Logged as ${client.user.tag}`);
 });
 
+client.on("voiceStateUpdate", async (oldVoice, newVoice) => {                     
+	if (!newVoice.guild.members.cache.get(client.user.id).voice.channelID) client.queue.delete(oldVoice.guild.id)
+	if (oldVoice.id === client.user.id) return
+	if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
+	if (oldVoice.guild.members.cache.get(client.user.id).voice.channel.id === oldVoice.channelID) {
+		if (oldVoice.guild.voice.channel) {
+			const delay = ms => new Promise(res => setTimeout(res, ms))
+			await delay(15000)
+            let vcMembers = oldVoice.guild.voice.channel.members
+            vcMembers = vcMembers.filter(member => !member.user.bot)
+			if (vcMembers.size === 0) {
+                const player = client.queue.get(oldVoice.guild.id)
+                if (player) {
+                    oldVoice.guild.voice.channel.leave()
+                    client.queue.delete(oldVoice.guild.id)
+                }
+                else { oldVoice.guild.voice.channel.leave() }
+			}
+		}
+	}
+})
+
 client.on('message', async message => {
     if (message.author.bot) return;
     if (message.content.indexOf(client.prefix) !== 0) return;
