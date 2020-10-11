@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 const fs = require("fs")
-require('events').EventEmitter.prototype._maxListeners = 15;
+require('events').EventEmitter.prototype._maxListeners = 69;
 
 const client = new Discord.Client()
 client.queue = new Map()
@@ -34,10 +34,10 @@ client.on("ready", () => {
     console.log(`Logged as ${client.user.tag}`);
 });
 
-client.on("voiceStateUpdate", async (oldVoice, newVoice) => {                     
+client.on("voiceStateUpdate", async (oldVoice, newVoice) => {
 	if (!newVoice.guild.members.cache.get(client.user.id).voice.channelID) client.queue.delete(oldVoice.guild.id)
 	if (oldVoice.id === client.user.id) return
-	if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
+	if (!oldVoice.guild.members.cache.get(client.user.id).voice.channel.id) return
 	if (oldVoice.guild.members.cache.get(client.user.id).voice.channel.id === oldVoice.channelID) {
 		if (oldVoice.guild.voice.channel) {
 			const delay = ms => new Promise(res => setTimeout(res, ms))
