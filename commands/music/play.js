@@ -45,7 +45,7 @@ module.exports.run = async (client, message, args) => {
                 videos.shift();
             };
         };
-        return message.channel.send(`**${playlist.title}** has been added to the queue!`);
+        return message.channel.send(Return.setDescription(`**${playlist.title}** has been added to the queue!`));
     }
     else {
         let validate = await YTDL.validateURL(args[0])
@@ -58,7 +58,7 @@ module.exports.run = async (client, message, args) => {
                 video = await youtube.getVideoByID(videos[0].id);
             } catch {
                 console.error(err);
-                return message.channel.send('No search results were found!');
+                return message.channel.send(Return.setDescription('No search results were found!'));
             };
         };
         return HandleVideo(client, video, message, VoiceChannel);
@@ -71,7 +71,7 @@ async function HandleVideo(client, video, message, voiceChannel, playlist = fals
         id: video.id,
         title: Discord.escapeMarkdown(video.title),
         url: `https://www.youtube.com/watch?v=${video.id}`,
-        duration : `${video.durationSeconds}`,
+        duration : `${formatDuration(video.duration)}`,
         requested: message.author,
         thumbnail: `https://i3.ytimg.com/vi/${video.id}/maxresdefault.jpg`,
         loop: false,
@@ -95,7 +95,7 @@ async function HandleVideo(client, video, message, voiceChannel, playlist = fals
             queueConstruct.connection = connection;
             PlaySong(client, message.guild, queueConstruct.songs[0]);
             const playing = new Discord.MessageEmbed().setTitle("Now Playing:").setColor("RANDOM")
-                .setDescription(`[${video.title}](${video.url})\n\`[${formatSeconds(queueConstruct.songs[0].duration)}]\``)
+                .setDescription(`[${video.title}](${video.url})\n\`[${queueConstruct.songs[0].duration}]\``)
                 .setThumbnail(queueConstruct.songs[0].thumbnail)
                 .setFooter(`Requested By: ${queueConstruct.songs[0].requested.tag}`)
             message.channel.send(playing);
@@ -103,13 +103,13 @@ async function HandleVideo(client, video, message, voiceChannel, playlist = fals
         catch(error) {
             console.error(`Could not join the voice channel: ${error}`);
             client.queue.delete(message.guild.id);
-            return message.channel.send(`Could not join the voice channel: ${error}`);
+            return message.channel.send(Return.setDescription(`Could not join the voice channel: ${error}`));
         }
     }
     else {
         serverQueue.songs.push(song);
         if(playlist) return;
-        else return message.channel.send(`**${song.title}** has been added to the queue!`);
+        else return message.channel.send(Return.setDescription(`**${song.title}** has been added to the queue!`));
     }
     return;
 };
@@ -120,7 +120,7 @@ async function PlaySong(client, guild, song) {
         client.queue.delete(guild.id);
         return;
     }
-    const dispatcher = serverQueue.connection.play(await YTDL(song.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 }))
+    const dispatcher = serverQueue.connection.play(await YTDL(song.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1024 * 1024 * 10 }))
     .on('finish', reason => {
         const currentSong = serverQueue.songs[0];
         if (currentSong) {
@@ -135,9 +135,18 @@ async function PlaySong(client, guild, song) {
     serverQueue.connection.on("disconnect", () => {client.queue.delete(guild.id)})
 };
 
-formatSeconds = (seconds) => {
-    return new Date(seconds * 1000).toISOString().substr(11, 8)
-};
+function formatDuration(durationObj) {
+    const duration = `${durationObj.hours ? durationObj.hours + ':' : ''}${
+      durationObj.minutes ? durationObj.minutes : '00'
+    }:${
+      durationObj.seconds < 10
+        ? '0' + durationObj.seconds
+        : durationObj.seconds
+        ? durationObj.seconds
+        : '00'
+    }`;
+    return duration;
+}
 
 module.exports.help = {
 	name: "play",
