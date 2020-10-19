@@ -37,7 +37,7 @@ client.on("ready", () => {
 client.on("voiceStateUpdate", async (oldVoice, newVoice) => {
 	if (!newVoice.guild.members.cache.get(client.user.id).voice.channelID) client.queue.delete(oldVoice.guild.id)
 	if (oldVoice.id === client.user.id) return
-	if (!oldVoice.guild.members.cache.get(client.user.id).voice.channel.id) return
+	if (!oldVoice.guild.members.cache.get(client.user.id).voice.channelID) return
 	if (oldVoice.guild.members.cache.get(client.user.id).voice.channel.id === oldVoice.channelID) {
 		if (oldVoice.guild.voice.channel) {
 			const delay = ms => new Promise(res => setTimeout(res, ms))
