@@ -103,13 +103,15 @@ async function HandleVideo(client, video, message, voiceChannel, playlist = fals
         catch(error) {
             console.error(`Could not join the voice channel: ${error}`);
             client.queue.delete(message.guild.id);
-            return message.channel.send(Return.setDescription(`Could not join the voice channel: ${error}`));
+            const errora = new Discord.MessageEmbed().setColor("RANDOM")
+            return message.channel.send(errora.setDescription(`Could not join the voice channel: ${error}`));
         }
     }
     else {
         serverQueue.songs.push(song);
+        const playlista = new Discord.MessageEmbed().setColor("RANDOM")
         if(playlist) return;
-        else return message.channel.send(Return.setDescription(`**${song.title}** has been added to the queue!`));
+        else return message.channel.send(playlista.setDescription(`**${song.title}** has been added to the queue!`));
     }
     return;
 };
