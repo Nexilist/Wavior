@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const YouTube = require('simple-youtube-api');
 const YTDL = require('ytdl-core');
 
-const youtube = new YouTube("AIzaSyAjrM9mropaMO-XaMpFszzsWz1OAWWy5i0");
+const youtube = new YouTube(" -- Token Here -- ");
 
 module.exports.run = async (client, message, args) => {
 	const searchString = args.slice(1).join(' ');   
